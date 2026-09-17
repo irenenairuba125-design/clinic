@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Upcoming Appointments{% endblock %}
+{% block content %}
+<h3 class="mb-3">Upcoming Appointments</h3>
+<div class="card">
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Reason</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for appt in appointments %}
+                <tr>
+                    <td><a href="{% url 'patients:detail' appt.patient.pk %}">{{ appt.patient.full_name }}</a></td>
+                    <td>{{ appt.doctor.get_full_name|default:"-" }}</td>
+                    <td>{{ appt.appointment_date }}</td>
+                    <td>{{ appt.appointment_time }}</td>
+                    <td>{{ appt.reason }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'appointments:detail' appt.pk %}" class="btn btn-sm btn-outline-secondary">View</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted py-4">No upcoming appointments.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% include "partials/pagination.html" %}
+{% endblock %}

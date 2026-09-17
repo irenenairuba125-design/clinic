@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Laboratory History - {{ patient.full_name }}{% endblock %}
+{% block content %}
+<h3 class="mb-3">Laboratory History - <a href="{% url 'patients:detail' patient.pk %}">{{ patient.full_name }}</a></h3>
+<div class="card">
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr><th>Test Name</th><th>Type</th><th>Requested</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for test in lab_tests %}
+                <tr>
+                    <td>{{ test.test_name }}</td>
+                    <td>{{ test.get_test_type_display }}</td>
+                    <td>{{ test.requested_date|date:"d M Y H:i" }}</td>
+                    <td><span class="badge bg-secondary">{{ test.get_status_display }}</span></td>
+                    <td class="text-end">
+                        <a href="{% url 'laboratory:detail' test.pk %}" class="btn btn-sm btn-outline-secondary">View</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center text-muted py-4">No laboratory tests yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

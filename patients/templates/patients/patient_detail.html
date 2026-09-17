@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}{{ patient.full_name }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+        <h3 class="mb-0">{{ patient.full_name }}</h3>
+        <span class="text-muted">{{ patient.patient_number }}</span>
+        {% if not patient.is_active %}<span class="badge bg-danger ms-2">Inactive</span>{% endif %}
+    </div>
+    <div class="btn-group">
+        <a href="{% url 'patients:update' patient.pk %}" class="btn btn-outline-secondary"><i class="bi bi-pencil"></i> Edit</a>
+        <a href="{% url 'appointments:create' %}?patient={{ patient.pk }}" class="btn btn-outline-primary">New Appointment</a>
+        <a href="{% url 'visits:create' %}?patient={{ patient.pk }}" class="btn btn-outline-primary">Record Visit</a>
+        <a href="{% url 'laboratory:create' %}?patient={{ patient.pk }}" class="btn btn-outline-primary">Request Lab Test</a>
+        {% if patient.is_active %}
+        <a href="{% url 'patients:delete' patient.pk %}" class="btn btn-outline-danger">Deactivate</a>
+        {% else %}
+        <form method="post" action="{% url 'patients:restore' patient.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-success">Restore</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-white">Personal Details</div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-5">Date of Birth</dt><dd class="col-7">{{ patient.date_of_birth }} ({{ patient.age }} yrs)</dd>
+                    <dt class="col-5">Gender</dt><dd class="col-7">{{ patient.get_gender_display }}</dd>
+                    <dt class="col-5">National ID</dt><dd class="col-7">{{ patient.national_id|default:"-" }}</dd>
+                    <dt class="col-5">Blood Group</dt><dd class="col-7">{{ patient.get_blood_group_display }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-white">Contact & Next of Kin</div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-5">Phone</dt><dd class="col-7">{{ patient.phone_number|default:"-" }}</dd>
+                    <dt class="col-5">Email</dt><dd class="col-7">{{ patient.email|default:"-" }}</dd>
+                    <dt class="col-5">Address</dt><dd class="col-7">{{ patient.address|default:"-" }}, {{ patient.district }}</dd>
+                    <dt class="col-5">Next of Kin</dt><dd class="col-7">{{ patient.next_of_kin_name|default:"-" }} ({{ patient.next_of_kin_phone|default:"-" }})</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between">
+                <span>Recent Appointments</span>
+                <a href="{% url 'appointments:list' %}" class="small">View all</a>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for appt in appointments %}
+                <li class="list-group-item">
+                    <a href="{% url 'appointments:detail' appt.pk %}">{{ appt.appointment_date }} {{ appt.appointment_time }}</a>
+                    <span class="badge bg-info text-dark float-end">{{ appt.get_status_display }}</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">No appointments yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between">
+                <span>Visit History</span>
+                <a href="{% url 'visits:patient_history' patient.pk %}" class="small">View all</a>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for visit in visits %}
+                <li class="list-group-item">
+                    <a href="{% url 'visits:detail' visit.pk %}">{{ visit.visit_date|date:"d M Y" }}</a> - {{ visit.chief_complaint }}
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">No visits recorded yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between">
+                <span>Laboratory History</span>
+                <a href="{% url 'laboratory:patient_history' patient.pk %}" class="small">View all</a>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for test in lab_tests %}
+                <li class="list-group-item">
+                    <a href="{% url 'laboratory:detail' test.pk %}">{{ test.test_name }}</a>
+                    <span class="badge bg-secondary float-end">{{ test.get_status_display }}</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">No laboratory tests yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

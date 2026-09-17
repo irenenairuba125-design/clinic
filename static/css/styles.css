@@ -1,0 +1,21 @@
+body {
+    background-color: #f4f6f8;
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.table thead {
+    background-color: #eef1f4;
+}

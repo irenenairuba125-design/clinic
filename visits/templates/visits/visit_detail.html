@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Visit Details{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+    <h3>Visit - {{ visit.patient.full_name }}</h3>
+    <a href="{% url 'visits:update' visit.pk %}" class="btn btn-outline-secondary">Edit</a>
+</div>
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-white">Visit Details</div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-4">Patient</dt><dd class="col-8"><a href="{% url 'patients:detail' visit.patient.pk %}">{{ visit.patient.full_name }}</a></dd>
+                    <dt class="col-4">Date</dt><dd class="col-8">{{ visit.visit_date|date:"d M Y H:i" }}</dd>
+                    <dt class="col-4">Attended By</dt><dd class="col-8">{{ visit.attended_by.get_full_name|default:"-" }}</dd>
+                    <dt class="col-4">Chief Complaint</dt><dd class="col-8">{{ visit.chief_complaint }}</dd>
+                    <dt class="col-4">Diagnosis</dt><dd class="col-8">{{ visit.diagnosis|default:"-" }}</dd>
+                    <dt class="col-4">Treatment</dt><dd class="col-8">{{ visit.treatment|default:"-" }}</dd>
+                    <dt class="col-4">Notes</dt><dd class="col-8">{{ visit.notes|default:"-" }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-white">Vitals</div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-6">Temperature</dt><dd class="col-6">{{ visit.temperature_celsius|default:"-" }} &deg;C</dd>
+                    <dt class="col-6">Blood Pressure</dt><dd class="col-6">{{ visit.blood_pressure|default:"-" }}</dd>
+                    <dt class="col-6">Pulse Rate</dt><dd class="col-6">{{ visit.pulse_rate|default:"-" }} bpm</dd>
+                    <dt class="col-6">Weight</dt><dd class="col-6">{{ visit.weight_kg|default:"-" }} kg</dd>
+                    <dt class="col-6">Height</dt><dd class="col-6">{{ visit.height_cm|default:"-" }} cm</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Lab Test Details{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+    <h3>{{ lab_test.test_name }} - {{ lab_test.patient.full_name }}</h3>
+    <div class="btn-group">
+        <a href="{% url 'laboratory:update' lab_test.pk %}" class="btn btn-outline-secondary">Edit</a>
+        {% if not lab_test.result %}
+        <a href="{% url 'laboratory:add_result' lab_test.pk %}" class="btn btn-primary">Capture Result</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-header bg-white">Test Request</div>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-3">Patient</dt><dd class="col-9"><a href="{% url 'patients:detail' lab_test.patient.pk %}">{{ lab_test.patient.full_name }}</a></dd>
+            <dt class="col-3">Test Type</dt><dd class="col-9">{{ lab_test.get_test_type_display }}</dd>
+            <dt class="col-3">Requested By</dt><dd class="col-9">{{ lab_test.requested_by.get_full_name|default:"-" }}</dd>
+            <dt class="col-3">Requested Date</dt><dd class="col-9">{{ lab_test.requested_date|date:"d M Y H:i" }}</dd>
+            <dt class="col-3">Status</dt><dd class="col-9"><span class="badge bg-secondary">{{ lab_test.get_status_display }}</span></dd>
+            <dt class="col-3">Notes</dt><dd class="col-9">{{ lab_test.notes|default:"-" }}</dd>
+        </dl>
+    </div>
+</div>
+
+{% if lab_test.result %}
+<div class="card">
+    <div class="card-header bg-white">Result {% if lab_test.result.is_abnormal %}<span class="badge bg-danger ms-2">Abnormal</span>{% endif %}</div>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-3">Result</dt><dd class="col-9">{{ lab_test.result.result_value }}</dd>
+            <dt class="col-3">Unit</dt><dd class="col-9">{{ lab_test.result.unit|default:"-" }}</dd>
+            <dt class="col-3">Reference Range</dt><dd class="col-9">{{ lab_test.result.reference_range|default:"-" }}</dd>
+            <dt class="col-3">Remarks</dt><dd class="col-9">{{ lab_test.result.remarks|default:"-" }}</dd>
+            <dt class="col-3">Recorded By</dt><dd class="col-9">{{ lab_test.result.recorded_by.get_full_name|default:"-" }}</dd>
+            <dt class="col-3">Recorded Date</dt><dd class="col-9">{{ lab_test.result.recorded_date|date:"d M Y H:i" }}</dd>
+        </dl>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h3 class="mb-4">Dashboard</h3>
+
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="text-muted small">Total Patients</div>
+                <div class="stat-value">{{ total_patients }}</div>
+                <a href="{% url 'patients:list' %}" class="small">View all &rarr;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="text-muted small">Today's Appointments</div>
+                <div class="stat-value">{{ todays_appointments_count }}</div>
+                <a href="{% url 'appointments:upcoming' %}" class="small">View upcoming &rarr;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="text-muted small">Missed Appointments</div>
+                <div class="stat-value">{{ missed_appointments_count }}</div>
+                <a href="{% url 'appointments:list' %}?status=MISSED" class="small">View all &rarr;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="text-muted small">Recent Visits</div>
+                <div class="stat-value">{{ recent_visits|length }}</div>
+                <a href="{% url 'visits:list' %}" class="small">View all &rarr;</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header bg-white">Today's Appointments</div>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Status</th></tr></thead>
+                    <tbody>
+                        {% for appt in todays_appointments %}
+                        <tr>
+                            <td>{{ appt.appointment_time }}</td>
+                            <td><a href="{% url 'patients:detail' appt.patient.pk %}">{{ appt.patient.full_name }}</a></td>
+                            <td>{{ appt.doctor.get_full_name|default:"-" }}</td>
+                            <td><span class="badge bg-info text-dark">{{ appt.get_status_display }}</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-center text-muted py-3">No appointments scheduled for today.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header bg-white">Recent Visits</div>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead><tr><th>Date</th><th>Patient</th><th>Chief Complaint</th></tr></thead>
+                    <tbody>
+                        {% for visit in recent_visits %}
+                        <tr>
+                            <td>{{ visit.visit_date|date:"d M Y H:i" }}</td>
+                            <td><a href="{% url 'patients:detail' visit.patient.pk %}">{{ visit.patient.full_name }}</a></td>
+                            <td>{{ visit.chief_complaint }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-center text-muted py-3">No visits recorded yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

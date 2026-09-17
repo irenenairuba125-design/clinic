@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Laboratory Report{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Laboratory Report</h3>
+    <a href="?start_date={{ start_date }}&end_date={{ end_date }}&status={{ selected_status }}&export=csv" class="btn btn-outline-success"><i class="bi bi-download"></i> Export CSV</a>
+</div>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <label class="form-label small mb-0">From</label>
+        <input type="date" name="start_date" value="{{ start_date }}" class="form-control">
+    </div>
+    <div class="col-auto">
+        <label class="form-label small mb-0">To</label>
+        <input type="date" name="end_date" value="{{ end_date }}" class="form-control">
+    </div>
+    <div class="col-auto">
+        <label class="form-label small mb-0">Status</label>
+        <select name="status" class="form-select">
+            <option value="">All</option>
+            {% for value, label in status_choices %}
+            <option value="{{ value }}" {% if value == selected_status %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-auto align-self-end">
+        <button type="submit" class="btn btn-outline-primary">Filter</button>
+    </div>
+</form>
+<div class="card">
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr><th>Patient</th><th>Test Name</th><th>Type</th><th>Status</th><th>Requested Date</th></tr>
+            </thead>
+            <tbody>
+                {% for test in lab_tests %}
+                <tr>
+                    <td>{{ test.patient.full_name }}</td>
+                    <td>{{ test.test_name }}</td>
+                    <td>{{ test.get_test_type_display }}</td>
+                    <td><span class="badge bg-secondary">{{ test.get_status_display }}</span></td>
+                    <td>{{ test.requested_date|date:"d M Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center text-muted py-4">No laboratory tests found for this range.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

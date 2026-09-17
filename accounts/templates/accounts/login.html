@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Sign In - AHF Uganda PMS{% endblock %}
+{% block extra_head %}
+<style>
+    .login-bg {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: -1.5rem -0.75rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #0d6efd 0%, #0a3d91 100%);
+    }
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+        border-radius: 1rem;
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+    }
+    .login-card .card-body {
+        padding: 2.5rem 2rem;
+    }
+    .login-logo {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: #0d6efd;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 1rem;
+    }
+    .login-card .input-group-text {
+        background-color: #eef3ff;
+        color: #0d6efd;
+        border-right: none;
+    }
+    .login-card input.form-control {
+        border-left: none;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="login-bg">
+    <div class="card login-card">
+        <div class="card-body">
+            <div class="login-logo"><i class="bi bi-hospital-fill"></i></div>
+            <h4 class="mb-1 text-center">AHF Uganda PMS</h4>
+            <p class="text-muted text-center mb-4">Patient Management System</p>
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+            {% crispy form %}
+        </div>
+    </div>
+</div>
+{% endblock %}

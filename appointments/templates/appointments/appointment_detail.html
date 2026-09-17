@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Appointment Details{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+    <h3>Appointment - {{ appointment.patient.full_name }}</h3>
+    <div class="btn-group">
+        <a href="{% url 'appointments:update' appointment.pk %}" class="btn btn-outline-secondary">Edit</a>
+        {% if appointment.status == "SCHEDULED" %}
+        <form method="post" action="{% url 'appointments:cancel' appointment.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger">Cancel Appointment</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-3">Patient</dt><dd class="col-9"><a href="{% url 'patients:detail' appointment.patient.pk %}">{{ appointment.patient.full_name }}</a></dd>
+            <dt class="col-3">Doctor</dt><dd class="col-9">{{ appointment.doctor.get_full_name|default:"-" }}</dd>
+            <dt class="col-3">Date</dt><dd class="col-9">{{ appointment.appointment_date }}</dd>
+            <dt class="col-3">Time</dt><dd class="col-9">{{ appointment.appointment_time }}</dd>
+            <dt class="col-3">Reason</dt><dd class="col-9">{{ appointment.reason }}</dd>
+            <dt class="col-3">Status</dt><dd class="col-9"><span class="badge bg-info text-dark">{{ appointment.get_status_display }}</span></dd>
+            <dt class="col-3">Notes</dt><dd class="col-9">{{ appointment.notes|default:"-" }}</dd>
+        </dl>
+    </div>
+</div>
+{% endblock %}

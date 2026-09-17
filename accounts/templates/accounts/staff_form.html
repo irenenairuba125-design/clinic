@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}New Staff Account{% endblock %}
+{% block content %}
+<h3 class="mb-3">New Staff Account</h3>
+<div class="card">
+    <div class="card-body">
+        {% crispy form %}
+    </div>
+</div>
+{% endblock %}

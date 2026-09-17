@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Capture Lab Result{% endblock %}
+{% block content %}
+<h3 class="mb-3">Capture Result - {{ lab_test.test_name }} ({{ lab_test.patient.full_name }})</h3>
+<div class="card">
+    <div class="card-body">
+        {% crispy form %}
+    </div>
+</div>
+{% endblock %}
